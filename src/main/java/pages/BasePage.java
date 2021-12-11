@@ -7,9 +7,12 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedCondition;
 import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 public class BasePage {
     private static WebDriver driver;
@@ -56,6 +59,16 @@ public class BasePage {
     public boolean isDisplayed(By locator) {
         WebDriverWait wait = new WebDriverWait(driver, timeOut);
         return wait.until(ExpectedConditions.visibilityOf(driver.findElement(locator))) != null;
+    }
+
+    public void selectElement(By locator, String selectText) {
+        Select selector = new Select(driver.findElement(locator));
+        selector.selectByVisibleText(selectText);
+    }
+
+    public void selectRadio(By locator, String radioOption) {
+        List<WebElement> elements = driver.findElements(locator);
+        elements.stream().filter(element -> element.getText().contains(radioOption)).collect(Collectors.toList()).get(0).click();
     }
 
     public void waitSomeTime(int t){
